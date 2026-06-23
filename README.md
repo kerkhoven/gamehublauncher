@@ -1,6 +1,3 @@
-# gamemenulauncher
-Project Game Menu Launcher untuk system diskless
-
 # 🎯 TUJUAN UTAMA TUGAS
 
 Kamu harus melakukan analisis menyeluruh terhadap seluruh dokumen dan menghasilkan:

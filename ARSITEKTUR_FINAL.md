@@ -151,10 +151,15 @@ CREATE TABLE games (
     publisher TEXT,
     description TEXT,
     cover_path TEXT,                -- Path ke file cover (512px WebP)
-    exe_path TEXT NOT NULL,         -- Path ke executable game
-    install_path TEXT,              -- Folder install game
+    exe_path TEXT,                  -- Absolute path (backward compatibility)
+    relative_exe_path TEXT NOT NULL,-- Relative path dari base path (CCBoot-optimized!)
+    install_path TEXT,              -- Absolute install path
+    relative_install_path TEXT,     -- Relative install path
     size_bytes INTEGER,             -- Ukuran game dalam bytes
-    status TEXT DEFAULT 'active',   -- active / inactive
+    status TEXT DEFAULT 'active',   -- active / inactive / needs_repair
+    health_status TEXT DEFAULT 'unknown', -- unknown / ok / warning / error
+    last_health_check DATETIME,     -- Terakhir kali health check dijalankan
+    fail_count INTEGER DEFAULT 0,   -- Jumlah gagal launch
     date_added DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_played DATETIME
 );
@@ -300,40 +305,65 @@ CREATE INDEX idx_launches_launch_time ON launches(launch_time);
 2. **Dispose with Care**: Release gambar yang tidak terlihat
 3. **Target**: < 50MB idle, < 100MB saat banyak game
 
-### 8.3 Disk IO Optimization (CCBoot)
-1. **WebP Format**: Smaller file size, faster decode
-2. **Local Cache**: Simpan thumbnail di client-side cache
-3. **Batch Read**: Baca semua game sekaligus, tidak per-record
-4. **Write Rarely**: Tulis DB hanya saat launch game atau edit favorit
+### 8.3 Disk IO & Path Management Optimization (Khusus CCBoot!)
+Ini adalah **bagian paling penting** untuk lingkungan diskless:
+
+1. **Relative Path + Base Path**: Jangan simpan absolute path di DB! Gunakan relative path + base path yang dapat dikonfigurasi.
+2. **Multiple Base Paths**: Dukung sampai 3 base path untuk fleksibilitas.
+3. **Health Check Otomatis**: Validasi executable sebelum launch (file exists, size > 0, readable).
+4. **Cache 3 Tingkat**: RAM → Local Disk (RAM disk di client) → Server.
+5. **Pre-Generate Thumbnail**: Operator harus generate semua WebP thumbnail di server.
+6. **Repair Mode**: Fitur repair library untuk bulk-edit path atau auto-detect game.
+
+Untuk detail lengkap, lihat **CCBOOT_OPTIMIZATION_GUIDE.md**!
 
 ---
 
-## 9. Development Guidelines (Sederhana tapi Jelas)
+## 9. CCBoot-Specific Features (Sudah Termasuk di MVP!)
 
-### 9.1 Do's
+| Fitur | Deskripsi | Prioritas |
+|-------|-----------|-----------|
+| Relative Path Support | Gunakan relative path + configurable base path | P0 |
+| Multi-Step Validation | Validasi file sebelum launch | P0 |
+| Graceful Error Handling | Pesan error jelas dan actionable | P0 |
+| Repair Mode di Admin | Scan, auto-repair, bulk edit path | P0 |
+| 3-Level Cache Strategy | RAM → Local Disk → Server | P0 |
+| Health Status Column | Tracking status kesehatan game | P1 |
+| Fail Count Counter | Jumlah gagal launch per game | P1 |
+| Simple Logging | Rotasi log harian, max 7 hari | P1 |
+
+---
+
+## 10. Development Guidelines (Sederhana tapi Jelas)
+
+### 10.1 Do's
 ✅ Gunakan WPF dengan .NET 8+  
 ✅ Gunakan EF Core (atau Dapper) untuk SQLite — simple dan cepat  
 ✅ Gunakan VirtualizingStackPanel untuk game grid  
 ✅ Lazy load gambar dengan async/await  
 ✅ Tulis unit test untuk service layer  
 ✅ Gunakan dependency injection sederhana (Microsoft.Extensions.DependencyInjection)  
+✅ Selalu validasi path executable sebelum launch!  
+✅ Gunakan relative path + base path untuk semua game!
 
-### 9.2 Don'ts
+### 10.2 Don'ts
 ❌ Jangan gunakan CQRS/Mediator pattern — overkill  
 ❌ Jangan gunakan Event Sourcing/Domain Events — tidak perlu  
 ❌ Jangan buat microservices — monolith dulu!  
 ❌ Jangan pakai Electron/Tauri/WebView — too heavy  
 ❌ Jangan buat abstraksi yang tidak perlu (misal IRepository untuk setiap table)  
 ❌ Jangan over-validate — keep it simple!  
+❌ Jangan simpan absolute path di database!
 
 ---
 
-## 10. Kesimpulan Final
+## 11. Kesimpulan Final
 
 Arsitektur ini **seimbang** antara:
 1. **Kesederhanaan MVP**: 3 layer, 5 tabel, fitur inti jelas
 2. **Performa Diskless**: Optimized untuk CCBoot, RAM rendah, startup cepat
 3. **Extensibility**: Mudah menambah fitur v1.5/v2.0 tanpa rewrite besar-besaran
 4. **Maintainability**: Struktur jelas, mudah dipahami developer baru
+5. **CCBoot-Ready**: Semua fitur khusus lingkungan diskless sudah termasuk!
 
 Ini adalah desain yang **saya benar-benar akan gunakan** sebagai Lead Architect untuk proyek production GameHub Launcher!
