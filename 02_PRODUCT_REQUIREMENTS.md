@@ -1,83 +1,71 @@
-# Product Requirements Document (PRD)
+# Product Requirements Document (PRD - Final & Konsisten)
 
 ## Product Name
-
 GameHub Launcher
 
 ## Purpose
-
-Launcher game modern untuk lingkungan warnet diskless.
+Launcher game modern yang **cepat, ringkas, dan stabil** untuk lingkungan warnet diskless (CCBoot).
 
 ## Objectives
 
-### Primary
+### Primary (MVP v1.0)
+- User dapat mencari game dengan cepat (< 1 detik)
+- User dapat menjalankan game dengan 1 klik (double-click)
+- Launcher berjalan dengan RAM < 50MB idle
+- Launcher startup dalam < 1 detik
+- Launcher stabil dan jarang crash di warnet 24/7
 
-* Menjalankan game secepat mungkin
-* Mempermudah pencarian game
-* Menampilkan library game secara menarik
-* Menggunakan resource seminimal mungkin
+### Secondary (v1.5+)
+- Meningkatkan discoverability game
+- Menyediakan analytics lokal untuk operator
+- Mempermudah manajemen game
 
-### Non Goals
+### Non Goals (Sampai Kapan Pun!)
+- ❌ Billing System
+- ❌ Auto Updater Game
+- ❌ Game Store
+- ❌ Social Platform
+- ❌ Chat
+- ❌ Browser Built-in
 
-* Billing System
-* Auto Updater
-* Game Store
-* Social Platform
-* Browser
+---
 
 ## Functional Requirements
 
-### FR-001 Search Game
+### v1.0 (MVP)
+| ID | Fitur | Deskripsi |
+|----|-------|-----------|
+| FR-101 | Search Game | Real-time filter nama game secara lokal |
+| FR-102 | Library View | Tampilkan semua game dalam grid dengan cover |
+| FR-103 | Launch Game | Double-click atau klik tombol Play → langsung jalan |
+| FR-104 | Favorites | Toggle bintang di game card untuk favorit |
+| FR-105 | Recently Played | Tampilkan 10 game terakhir dimainkan |
+| FR-106 | Admin Modal | Password-protected untuk Add/Edit/Delete game |
 
-User dapat mencari game secara realtime.
+### v1.5 (Enhanced)
+| ID | Fitur | Deskripsi |
+|----|-------|-----------|
+| FR-151 | Trending Games | Top 10 game terbanyak diluncurkan 7 hari terakhir |
+| FR-152 | Genre Filter | Filter game berdasarkan genre |
+| FR-153 | Recently Added | Game baru di 30 hari terakhir |
+| FR-154 | Basic Analytics | Lihat total launch per game |
+| FR-155 | Backup/Restore | Backup dan restore database |
 
-### FR-002 Launch Game
+---
 
-User dapat menjalankan game dengan satu klik.
+## Non-Functional Requirements
 
-### FR-003 Favorites
+| Kategori | Target |
+|----------|--------|
+| Startup Time | < 1 detik |
+| RAM Usage (Idle) | < 50 MB |
+| RAM Usage (Max) | < 100 MB |
+| CPU Usage (Idle) | < 1% |
+| Search Latency | < 50 ms |
+| Platform | Windows 10 1809+, Windows 11 |
+| Availability | Offline First (100% offline) |
 
-User dapat menyimpan game favorit.
+---
 
-### FR-004 Recently Played
-
-Launcher menyimpan histori permainan.
-
-### FR-005 Trending Games
-
-Launcher menampilkan game populer.
-
-### FR-006 Collections
-
-Game dapat dikelompokkan dalam kategori.
-
-### FR-007 Recommendations
-
-Launcher dapat merekomendasikan game serupa.
-
-## Non Functional Requirements
-
-### Startup
-
-< 1 detik
-
-### RAM
-
-50 MB - 100 MB
-
-### CPU
-
-< 1% idle
-
-### Search
-
-< 50 ms
-
-### Availability
-
-Offline First
-
-### Platform
-
-Windows 10
-Windows 11
+## Tech Stack (Final)
+Lihat **01_PRODUCT_VISION.md** atau **ARSITEKTUR_FINAL.md** untuk detail lengkap.

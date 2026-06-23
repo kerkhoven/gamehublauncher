@@ -1,626 +1,152 @@
 # GameHub Launcher
+## Product Vision (Final & Konsisten)
 
-## Product Requirement Document (PRD)
-
-Version: 1.0
+Version: 2.0 (Final)
 Target Platform: Windows 10 / Windows 11
 Target Environment: Warnet Diskless (CCBoot)
 
 ---
 
-# 1. Overview
+## 1. Core Principles
 
-GameHub Launcher adalah aplikasi launcher game modern yang dirancang khusus untuk lingkungan warnet diskless.
+### Prinsip Utama (TIDAK BERUBAH!)
+> **"Find game fast. Launch game instantly."**
 
-Fokus utama launcher adalah:
+Launcher ini **bukan** platform, bukan social network, bukan store. Hanya launcher game untuk warnet.
 
-* Menemukan game dengan cepat
-* Menjalankan game dalam 1 klik
-* Tampilan modern dan menarik
-* Penggunaan RAM rendah
-* Startup sangat cepat
-* Ramah terhadap lingkungan diskless
-* Tidak menggantikan software billing
-
-Launcher tidak berfungsi sebagai:
-
-* Billing client
-* Store game
-* Browser web
-* Social platform
-* Chat platform
-* Auto updater kompleks
+### Secondary Principles
+- Fast First (kecepatan adalah raja)
+- Offline First (tidak butuh internet)
+- Simple & Reliable (tidak ada fitur yang tidak perlu)
+- Low Resource Usage (RAM < 50MB idle)
+- Diskless-Optimized (CCBoot-friendly)
 
 ---
 
-# 2. Product Goals
+## 2. Product Goals
 
-## Primary Goals
+### Primary Goals (MVP v1.0)
+1. User dapat mencari game dalam < 1 detik
+2. User dapat menjalankan game dengan 1 klik (double-click)
+3. Launcher berjalan dengan RAM < 50MB saat idle
+4. Launcher startup dalam < 1 detik
+5. Launcher tetap responsif di PC spesifikasi rendah
 
-* User dapat menemukan game dalam < 3 detik
-* User dapat menjalankan game dalam 1 klik
-* Launcher berjalan dengan RAM rendah
-* Launcher tetap responsif pada PC spesifikasi rendah
-
-## Secondary Goals
-
-* Meningkatkan discoverability game
-* Menampilkan game populer
-* Menampilkan game terbaru
-* Menampilkan rekomendasi game
+### Secondary Goals (v1.5+)
+- Meningkatkan discoverability game dengan Trending & Genre Filter
+- Menyediakan analytics lokal untuk operator
+- Mempermudah manajemen game dengan admin panel terpisah
 
 ---
 
-# 3. Design Philosophy
+## 3. Version Roadmap (Final & Konsisten)
 
-Inspirasi:
+### Version 1.0 (MVP - Production Ready!)
+**Fitur Wajib:**
+- ✅ Library (semua game dalam grid view dengan cover)
+- ✅ Real-time Search Game (filter nama game)
+- ✅ Launch Game (double-click atau tombol Play)
+- ✅ Favorites (toggle bintang di game card)
+- ✅ Recently Played (10 game terakhir)
+- ✅ Admin Modal (password-protected: Add/Edit/Delete Game)
+- ✅ Basic Error Handling
+- ✅ Performance Optimized (RAM < 50MB, startup < 1s)
 
-* Steam Library
-* Xbox App
-* Riot Client
-* Playnite
+**Tidak Ada di MVP:**
+- ❌ Hero Banner / Home Page terpisah
+- ❌ REST API Layer
+- ❌ Admin Panel terpisah
+- ❌ Recommendation Engine
+- ❌ Analytics Engine
+- ❌ Tags / Collections
+- ❌ Trending Games
+- ❌ Multi-branch / Cloud Sync
 
-Prinsip:
+### Version 1.5 (Enhanced Discovery)
+- Trending Games (7 hari terakhir)
+- Genre Filter
+- Recently Added Games (30 hari terakhir)
+- Basic Local Analytics
+- Thumbnail 256px (cache untuk grid view)
+- Backup/Restore Database
 
-* Fast First
-* Search First
-* Click Less
-* Resource Efficient
-
----
-
-# 4. Main Navigation
-
-## Home
-
-Menampilkan:
-
-* Hero Banner
-* Continue Playing
-* Trending Games
-* Recently Added
-* Recommended Games
-
-## Library
-
-Menampilkan:
-
-* Semua game
-* Filter kategori
-* Search
-* Sort
-
-## Favorites
-
-Menampilkan game favorit user.
-
-## Recently Played
-
-Menampilkan histori game terakhir dimainkan.
+### Version 2.0 (Advanced Features)
+- Tags System
+- Admin Panel Terpisah
+- REST API (Optional - untuk sync multi-PC)
+- Collections
+- Simple Recommendations (same genre)
+- Auto-scan Games Folder
 
 ---
 
-# 5. Home Page Layout
+## 4. UI/UX Guidelines (Final)
 
-```text
-┌─────────────────────────────────────┐
-│             HERO BANNER             │
-└─────────────────────────────────────┘
+### Design Philosophy
+- Search First (search bar selalu di atas, fokus otomatis saat startup)
+- Click Less (max 2 klik untuk main game)
+- Minimal Distraction (tidak ada banner/animasi berat)
+- Dark Theme (nyaman di warnet)
 
-Continue Playing
-[Valorant] [Point Blank] [Roblox]
-
-Trending Today
-[Game] [Game] [Game]
-
-Recently Added
-[Game] [Game] [Game]
-
-Recommended For You
-[Game] [Game] [Game]
+### Main Layout
+```
+┌─────────────────────────────────────────────────────┐
+│  [ICON] GameHub Launcher          ⚙️ Admin 🔍 Search │
+├─────────────────────────────────────────────────────┤
+│  ┌───────────────────────────────────────────────┐  │
+│  │  🔍 Cari game... (FOCUS OTOMATIS)             │  │
+│  └───────────────────────────────────────────────┘  │
+├─────────────────────────────────────────────────────┤
+│  [⭐ Favorites]  [📚 All Games (ACTIVE)]  [⏰ Recent]│
+├─────────────────────────────────────────────────────┤
+│  [Grid Game Cards - Virtualized]                    │
+│  [Grid Game Cards - Virtualized]                    │
+└─────────────────────────────────────────────────────┘
 ```
 
----
-
-# 6. Library Layout
-
-```text
-┌─────────────────────────────────────┐
-│ Search Game...                      │
-└─────────────────────────────────────┘
-
-Genre:
-[FPS]
-[MOBA]
-[Racing]
-[RPG]
-[Horror]
-
-Games Grid:
-
-┌─────┐ ┌─────┐ ┌─────┐
-│Game │ │Game │ │Game │
-└─────┘ └─────┘ └─────┘
-```
+### Tab Navigation (Hanya 3!)
+1. **⭐ Favorites**: Game favorit user
+2. **📚 All Games**: Semua game aktif (default)
+3. **⏰ Recently Played**: 10 game terakhir dimainkan
 
 ---
 
-# 7. Game Detail Layout
+## 5. Database Schema (Final - v1.0 Compatible)
 
-```text
-┌─────────────────────────────┐
-│         GAME COVER          │
-└─────────────────────────────┘
+### Core Tables (Digunakan di MVP)
+1. **games**: Semua informasi game
+2. **favorites**: Game favorit
+3. **launches**: Histori launch game (untuk Recently Played & Trending nanti)
 
-Game Name
+### Extended Tables (Disiapkan untuk v1.5+)
+4. **tags**: Tag untuk game
+5. **game_tags**: Relasi many-to-many game & tag
 
-Genre
-Developer
-Size
-
-Description
-
-[ PLAY ]
-```
+Lihat **ARSITEKTUR_FINAL.md** untuk schema lengkap.
 
 ---
 
-# 8. Core Features
+## 6. Technology Stack (Final)
 
-## Smart Search
+| Komponen | Pilihan |
+|----------|---------|
+| UI Framework | WPF (.NET 8+) |
+| Database | SQLite |
+| Language | C# |
+| Image Format | WebP (256px & 512px) |
+| ORM | EF Core (atau Dapper) |
 
-Search harus real-time.
-
-Contoh:
-
-Input:
-
-valo
-
-Output:
-
-Valorant
-
-Latency target:
-
-< 50 ms
+**Tidak Dipakai:**
+- Electron / Tauri / WebView (too heavy)
+- CQRS / Mediator / Domain Events (overkill)
+- Microservices (monolith dulu!)
 
 ---
 
-## Quick Launch
-
-Double click game:
-
-langsung menjalankan executable.
-
-Tanpa splash screen tambahan.
-
----
-
-## Hover Preview
-
-Saat cursor berada di atas game:
-
-Tampilkan:
-
-* Cover
-* Genre
-* Size
-* Launch Button
-
----
-
-## Recently Played
-
-Menyimpan:
-
-* Last Played
-* Play Count
-
-Menampilkan game yang sering dimainkan.
-
----
-
-## Favorites
-
-User dapat:
-
-* Menambahkan favorit
-* Menghapus favorit
-
-Disimpan lokal.
-
----
-
-## Trending System
-
-Menghitung:
-
-launch_count
-
-per hari.
-
-Menampilkan:
-
-Top 10 game paling sering dimainkan.
-
----
-
-## Recommended Games
-
-Menggunakan rule sederhana:
-
-Jika user sering memainkan FPS:
-
-Rekomendasikan FPS lain.
-
-Tidak menggunakan AI online.
-
----
-
-## Recently Added
-
-Menampilkan game yang baru ditambahkan operator.
-
----
-
-# 9. User Flow
-
-## Launch Game
-
-```text
-Open Launcher
-
-↓
-
-Search Game
-
-↓
-
-Click Game
-
-↓
-
-Play
-```
-
-## Browse Game
-
-```text
-Open Launcher
-
-↓
-
-Library
-
-↓
-
-Select Genre
-
-↓
-
-Game Detail
-
-↓
-
-Play
-```
-
----
-
-# 10. Database Structure
-
-SQLite
-
-## games
-
-```sql
-id
-name
-genre
-developer
-description
-cover_image
-exe_path
-install_path
-size
-status
-date_added
-```
-
-## play_history
-
-```sql
-id
-game_id
-launch_time
-duration
-```
-
-## favorites
-
-```sql
-id
-game_id
-```
-
-## statistics
-
-```sql
-game_id
-launch_count
-last_launch
-```
-
----
-
-# 11. Folder Structure
-
-```text
-GameHubLauncher/
-
-├── assets/
-│   ├── covers/
-│   ├── banners/
-│   └── icons/
-│
-├── database/
-│   └── launcher.db
-│
-├── games/
-│
-├── logs/
-│
-├── config/
-│   └── settings.json
-│
-├── ui/
-│
-├── core/
-│
-├── cache/
-│
-└── GameHub.exe
-```
-
----
-
-# 12. Resource Targets
-
-## Startup Time
-
-Target:
-
-< 1 second
-
-## RAM Usage
-
-Idle:
-
-50 MB - 100 MB
-
-Maximum:
-
-150 MB
-
-## CPU Usage
-
-Idle:
-
-< 1%
-
-## Disk Usage
-
-Cache:
-
-< 100 MB
-
----
-
-# 13. Diskless Optimization
-
-## Avoid
-
-* Web browser engine
-* Electron
-* Chromium embedded
-* Background services
-
-## Prefer
-
-* Native UI
-* Local assets
-* SQLite
-* Lazy loading
-
-## Cover Images
-
-Gunakan:
-
-* WebP
-* Thumbnail cache
-
-Maksimal:
-
-512x768
-
----
-
-# 14. Recommended Technology Stack
-
-## Option Comparison
-
-### Electron
-
-Pros:
-
-* Cepat dikembangkan
-
-Cons:
-
-* RAM besar
-* Startup lambat
-
-Status:
-Not Recommended
-
----
-
-### PySide6
-
-Pros:
-
-* Cepat dikembangkan
-* UI modern
-
-Cons:
-
-* Bundle besar
-
-Status:
-Good
-
----
-
-### WPF
-
-Pros:
-
-* Native
-* Stabil
-* Cepat
-
-Cons:
-
-* Windows only
-
-Status:
-Very Good
-
----
-
-### WinUI 3
-
-Pros:
-
-* Modern
-* Native
-
-Cons:
-
-* Masih berkembang
-
-Status:
-Good
-
----
-
-### Qt C++
-
-Pros:
-
-* Sangat cepat
-* Sangat ringan
-
-Cons:
-
-* Development lebih kompleks
-
-Status:
-Best Performance
-
----
-
-# 15. Visual Design
-
-Theme:
-
-Dark Modern
-
-Colors:
-
-Background:
-#111111
-
-Surface:
-#1A1A1A
-
-Border:
-#2A2A2A
-
-Accent:
-#3B82F6
-
-Text:
-#FFFFFF
-
-Secondary Text:
-#AAAAAA
-
----
-
-# 16. Animations
-
-Allowed:
-
-* Fade
-* Opacity Transition
-* Small Scale Hover
-
-Not Allowed:
-
-* Heavy Blur
-* Complex Particle Effects
-* Video Background
-* Continuous Animations
-
----
-
-# 17. Version Roadmap
-
-## Version 1.0
-
-* Library
-* Search
-* Favorites
-* Recently Played
-* Launch Game
-
-## Version 1.5
-
-* Trending Games
-* Recently Added
-* Statistics
-
-## Version 2.0
-
-* Recommendation Engine
-* Operator Dashboard
-* Game Health Status
-
-## Version 3.0
-
-* Cloud Sync
-* Multi Branch Statistics
-* Cross-Warnet Analytics
-
----
-
-# 18. Success Metrics
-
-Target:
-
-* Search success < 3 seconds
-* Launch success > 99%
-* Startup < 1 second
-* RAM < 100 MB idle
-
----
-
-# Final Principle
-
-Launcher exists for one purpose:
-
-"Find game fast. Launch game instantly."
-
-Everything else is secondary.
+## 7. Success Metrics
+
+1. Search success: < 1 detik
+2. Launch success: > 99%
+3. Startup time: < 1 detik
+4. RAM usage: < 50MB idle
+5. No crashes di warnet 24/7
